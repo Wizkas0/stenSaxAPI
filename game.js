@@ -1,4 +1,4 @@
-class Game {
+export default class Game {
     //The model for a game of rockPaperScissors
     players = [2]
     constructor(gameID, player1) {

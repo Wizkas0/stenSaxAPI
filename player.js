@@ -1,4 +1,4 @@
-class Player{
+export default class Player{
     //The model for a player
     constructor(id) {
         this.id = id;
