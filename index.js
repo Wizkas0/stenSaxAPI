@@ -20,6 +20,11 @@ app.post("/games/:gameID/choose", (req, res) => {
   res.send(server.choose(req.params.gameID, playerID, choice))
 })
 
+app.get("/games/:gameID", (req, res) => {
+  const playerID = req.params.playerID;
+  res.send(server.check(req.params.gameID, playerID))
+})
+
 app.listen(
     port, () => console.log("Server started")
 );

@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = import('uuid');
+import { v4 as uuidv4 } from 'uuid';
 import Game from "./game.js";
 import Player from "./player.js";
 
@@ -8,11 +8,12 @@ export default class Server{
     }
 
     createGame(){
-        const uuidGame = uuidv4();
-        const uuidPlayer = uuidv4();
+        const uuidGame = 1 //uuidv4();
+        const uuidPlayer = 2  //uuidv4();
         const player1 = new Player(uuidPlayer);
         const game = new Game(uuidGame, player1);
-        games[uuidGame] = game;
+        this.games[uuidGame] = game;
+        console.log(this.games);
         return {
             "Your ID": uuidPlayer,
             "Game URI": "/game/" + uuidGame
@@ -20,22 +21,22 @@ export default class Server{
     }
 
     joinGame(gameID){
-        const uuidPlayer = uuidv4();
+        const uuidPlayer = 3 //uuidv4();
         const player2 = new Player(uuidPlayer);
-        const game = games[gameID];
+        const game = this.games[gameID];
         const added = game.addPlayer(player2);
-        
+        console.log(this.games);
         return added ? {"Your ID": uuidPlayer} : false
     }
 
     choose(gameID, playerID, choice){
-        const game = games[gameID];
+        const game = this.games[gameID];
         const chosen = game.choose(playerID, choice);
         return chosen ? {"Your choice": choice} : false
     }
 
     check(gameID, playerID){
-        const game = games[gameID];
+        const game = this.games[gameID];
         return game.getState(playerID);
     }
 }

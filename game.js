@@ -19,6 +19,7 @@ export default class Game {
 
     getState(playerID){
         //Returns the state of the game
+        console.log()
         const thisPlayer = this.players.filter(player => player.id === playerID)[0];
         const otherPlayer  = this.players.filter(player => !(player.id === playerID))[0];
         const returnObject = {
