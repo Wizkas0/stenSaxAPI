@@ -25,7 +25,7 @@ export default class Server{
         const player2 = new Player(uuidPlayer);
         const game = this.games[gameID];
         const added = game.addPlayer(player2);
-        console.log(this.games);
+        console.log(added);
         return added ? {"Your ID": uuidPlayer} : false
     }
 

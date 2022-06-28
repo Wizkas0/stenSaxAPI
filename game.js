@@ -8,8 +8,11 @@ export default class Game {
 
     addPlayer(player2) {
         //Adds a second player to a game or returns false if there are already two players
-        if (!this.players[1]) return false;
-        this.players[1] = player2;
+        if (this.players[1]) return false;
+        else {
+            this.players[1] = player2;
+            return true;
+        }
     }
 
     choose(playerID, choice){
@@ -19,9 +22,11 @@ export default class Game {
 
     getState(playerID){
         //Returns the state of the game
-        console.log()
-        const thisPlayer = this.players.filter(player => player.id === playerID)[0];
-        const otherPlayer  = this.players.filter(player => !(player.id === playerID))[0];
+        console.log(this.players);
+        console.log(playerID);
+        const thisPlayer = this.players.filter(player => player.id == playerID);
+        console.log(thisPlayer);
+        const otherPlayer  = this.players.filter(player => !(player.id == playerID))[0];
         const returnObject = {
             "Your choice": thisPlayer.choice || "TBD",
             "Their choice": otherPlayer.choice ? "Hidden" : "TBD",
