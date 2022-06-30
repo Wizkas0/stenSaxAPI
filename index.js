@@ -17,6 +17,7 @@ app.post("/games/:gameID/join", (req, res) => {
 app.post("/games/:gameID/choose", (req, res) => {
   const playerID = req.body.playerID;
   const choice = req.body.choice;
+  console.log(req.body)
   res.send(server.choose(req.params.gameID, playerID, choice))
 })
 
