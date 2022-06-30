@@ -17,14 +17,17 @@ export default class Game {
 
     choose(playerID, choice){
         //Sets the choice player with the given id to the given choice, or returns false if it has already been set
-        return this.players.filter(player => player.id == playerID)[0].choose(choice);
+
+        const thisPlayer = this.getPlayer(playerID);
+        this.checkLegality(choice);
+        return thisPlayer.choose(choice);
     }
 
     getState(playerID){
         //Returns the state of the game
         console.log(this.players);
         console.log(playerID);
-        const thisPlayer = this.players.filter(player => player.id == playerID)[0];
+        const thisPlayer = this.getPlayer(playerID)
         console.log(thisPlayer);
         const otherPlayer  = this.players.filter(player => !(player.id == playerID))[0];
         const returnObject = {
@@ -40,6 +43,16 @@ export default class Game {
             returnObject["Result"] = result;
         }
         return returnObject;
+    }
+
+    getPlayer(id){
+        const thisPlayer = this.players.filter(player => player.id == id)[0];
+        if(!thisPlayer) throw new Error("Incorrect playerID!");
+        return thisPlayer;
+    }
+    checkLegality(choiceToTry){
+        const legalChoices = ["Rock", "Paper", "Scissors"]
+        if(!legalChoices.filter(choice => choice === choiceToTry)[0]) throw new Error("Illegal choice!")
     }
 
     didYouWin(yourChoice, theirChoice){

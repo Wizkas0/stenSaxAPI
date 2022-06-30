@@ -23,21 +23,26 @@ export default class Server{
     joinGame(gameID){
         const uuidPlayer = 3 //uuidv4();
         const player2 = new Player(uuidPlayer);
-        const game = this.games[gameID];
-        if(!game){throw new Error("Incorrect ID!")}
+        const game = this.getGame(gameID);
         const added = game.addPlayer(player2);
         console.log(added);
         return added ? {"Your ID": uuidPlayer} : false
     }
 
     choose(gameID, playerID, choice){
-        const game = this.games[gameID];
+        const game = this.getGame(gameID);
         const chosen = game.choose(playerID, choice);
         return chosen ? {"Your choice": choice} : false
     }
 
     check(gameID, playerID){
-        const game = this.games[gameID];
+        const game = this.getGame(gameID);
         return game.getState(playerID);
+    }
+
+    getGame(id){
+        const game = this.games[id];
+        if(!game) throw new Error("Incorrect gameID!")
+        return game
     }
 }
