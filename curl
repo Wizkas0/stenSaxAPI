@@ -4,6 +4,6 @@ curl -X POST -d '{"playerID": "3", "choice": "Paper"}' -H "Content-Type: applica
 
 curl -X POST -d '{"playerID": "2", "choice": "Rock"}' -H "Content-Type: application/json" http://localhost:8080/games/1/choose
 
-curl -X POST -d http://localhost:8080/games/1/join
+curl -X POST http://localhost:8080/games/1/join
 
 curl -X POST http://localhost:8080/games

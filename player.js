@@ -5,7 +5,7 @@ export default class Player{
     }
 
     choose(choice){
-        if (this.choice) return false;
+        if (this.choice) throw new Error("You have already chosen!");
         this.choice = choice;
     }
 }

@@ -24,6 +24,7 @@ export default class Server{
         const uuidPlayer = 3 //uuidv4();
         const player2 = new Player(uuidPlayer);
         const game = this.games[gameID];
+        if(!game){throw new Error("Incorrect ID!")}
         const added = game.addPlayer(player2);
         console.log(added);
         return added ? {"Your ID": uuidPlayer} : false

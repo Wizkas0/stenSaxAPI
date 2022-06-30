@@ -6,6 +6,11 @@ const port = 8080;
 const server = new Server();
 app.use(express.json())
 
+app.all("/games/:gameID*", (req, res, next) => {
+  if(!req.params.gameID) res.send(400);
+  next();
+})
+
 app.post("/games", (req, res) => {
   res.send(server.createGame())
 })

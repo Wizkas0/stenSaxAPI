@@ -8,7 +8,7 @@ export default class Game {
 
     addPlayer(player2) {
         //Adds a second player to a game or returns false if there are already two players
-        if (this.players[1]) return false;
+        if (this.players[1]) throw new Error("Game is full!");
         else {
             this.players[1] = player2;
             return true;
