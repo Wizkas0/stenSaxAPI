@@ -1,4 +1,5 @@
-export default class Game {
+
+module.exports = class Game {
     //The model for a game of rockPaperScissors
     players = [2]
     constructor(gameID, player1) {

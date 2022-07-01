@@ -1,4 +1,5 @@
-export default class Player{
+
+module.exports = class Player{
     //The model for a player
     constructor(id) {
         this.id = id;

@@ -1,15 +1,10 @@
-import Server from "./server.js";
-import express from "express";
+const Server = require("./server.js");
+const express = require('express');
 
 const app = express();
 const port = 8080;
 const server = new Server();
 app.use(express.json())
-
-//app.all("/games/:gameID*", (req, res, next) => {
-//  if(!req.params.gameID) res.send(400);
-//  next();
-//})
 
 app.post("/games", (req, res) => {
   res.send(server.createGame())
@@ -45,6 +40,4 @@ app.get("/games/:gameID", (req, res) => {
 
 })
 
-app.listen(
-    port, () => console.log("Server started")
-);
+module.exports = app.listen( port, () => console.log("Server started"));

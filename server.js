@@ -1,8 +1,8 @@
-import { v4 as uuidv4 } from 'uuid';
-import Game from "./game.js";
-import Player from "./player.js";
+const { v4: uuidv4 } = require('uuid');
+const Game = require("./game.js");
+const Player = require("./player.js");
 
-export default class Server{
+module.exports = class Server{
     games = {}
     constructor() {
     }
