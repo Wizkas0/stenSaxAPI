@@ -1,59 +1,72 @@
 
-module.exports = class Game {
+export default class Game {
     //The model for a game of rockPaperScissors
-    players = [2]
+    players = [null, null]
     constructor(gameID, player1) {
         this.id = gameID;
-        this.players[0] = player1;
+        this.addPlayer(player1);
     }
 
-    addPlayer(player2) {
+    addPlayer(player) {
         //Adds a second player to a game or returns false if there are already two players
-        if (this.players[1]) throw new Error("Game is full!");
-        else {
-            this.players[1] = player2;
-            return true;
+        //console.log(this.players[0])
+        if (!this.players[0]) this.players[0] = player;
+        else if (!this.players[1]) this.players[1] = player;
+        else{
+            throw new Error("Game is full!");
         }
     }
 
-    choose(playerID, choice){
+    play(playerID, choice){
         //Sets the choice player with the given id to the given choice, or returns false if it has already been set
 
         const thisPlayer = this.getPlayer(playerID);
-        this.checkLegality(choice);
-        return thisPlayer.choose(choice);
+        const standardized = this.checkLegality(choice);
+        return thisPlayer.play(standardized);
     }
 
     getState(playerID){
         //Returns the state of the game
-        console.log(this.players);
-        console.log(playerID);
+        //console.log(this.players);
+        //console.log(playerID);
         const thisPlayer = this.getPlayer(playerID)
-        console.log(thisPlayer);
-        const otherPlayer  = this.players.filter(player => !(player.id == playerID))[0];
+        //console.log(thisPlayer);
+        //console.log(this.players);
+        const otherPlayer  = this.players.filter(thing => thing !== null).filter(player => !(player.id == playerID))[0];
         const returnObject = {
-            "Your choice": thisPlayer.choice || "TBD",
-            "Their choice": otherPlayer.choice ? "Hidden" : "TBD",
-            "Result": "TBD"
+            players: [thisPlayer? (thisPlayer.name || "Anonymous") + " (you)": "Player has not joined", 
+            otherPlayer ? (otherPlayer.name || "Anonymous"): "Player has not joined"],
+            yourChoice: thisPlayer.choice || "TBD",
+            result: "TBD"
         }
-        console.log(thisPlayer.choice);
-        console.log(otherPlayer.choice);
-        if(thisPlayer.choice && otherPlayer.choice) {
-            const result = this.didYouWin(thisPlayer.choice, otherPlayer.choice);
-            returnObject["Their choice"] = otherPlayer.choice;
-            returnObject["Result"] = result;
+        if(otherPlayer){
+            returnObject.theirChoice = (otherPlayer.choice ? "Hidden" : "TBD")
+            if(thisPlayer.choice && otherPlayer.choice) {
+                const result = this.didYouWin(thisPlayer.choice, otherPlayer.choice);
+                returnObject.theirChoice = otherPlayer.choice;
+                returnObject.result = result;
+            }
         }
+        
+        //console.log(thisPlayer.choice);
+        //console.log(otherPlayer.choice);
         return returnObject;
     }
 
     getPlayer(id){
-        const thisPlayer = this.players.filter(player => player.id == id)[0];
-        if(!thisPlayer) throw new Error("Incorrect playerID!");
+        //console.log(this.players);
+        const thisPlayer = this.players.filter(thing => thing != null).filter(player => player.id == id)[0];
+        if(!thisPlayer) { //console.log(this.players);
+            //console.log(id);
+            throw new Error("Incorrect playerID!");}
         return thisPlayer;
     }
     checkLegality(choiceToTry){
+        if(!choiceToTry) throw new Error("No choice provided!");
         const legalChoices = ["Rock", "Paper", "Scissors"]
-        if(!legalChoices.filter(choice => choice === choiceToTry)[0]) throw new Error("Illegal choice!")
+        const legalchoice = legalChoices.filter(choice => choice.toLowerCase() === choiceToTry.toLowerCase())[0]
+        if(!legalchoice) throw new Error("Illegal choice!");
+        return legalchoice;
     }
 
     didYouWin(yourChoice, theirChoice){
