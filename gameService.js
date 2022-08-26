@@ -1,16 +1,16 @@
 import { v4 as uuidv4 } from 'uuid';
-import Game from "./game.js";
-import Player from "./player.js";
+import GameModel from "./gameModel.js";
+import PlayerModel from "./playerModel.js";
 
-export default class Server{
+export default class gameService{
     count = 0;
     //The server object which contains and manipulates game objects, is initialized with two games if it was initialized for testing purposes.
     constructor(serverUrl, port, test) {
         this.serverUrl  = serverUrl;
         this.port = port? ":" + port : ""
         this.games = test ? {
-            "1234": new Game("1234", new Player("1111")),
-            "12345": new Game("12345", new Player("1112")).addPlayer(new Player("1113"))
+            "1234": new GameModel("1234", new PlayerModel("1111")),
+            "12345": new GameModel("12345", new PlayerModel("1112")).addPlayer(new PlayerModel("1113"))
         }
         : {}
     }
@@ -19,11 +19,10 @@ export default class Server{
         this.count ++;
         const uuidGame = uuidv4();
         const uuidPlayer = uuidv4();
-        const player1 = new Player(uuidPlayer, name);
-        const game = new Game(uuidGame, player1);
+        const player1 = new PlayerModel(uuidPlayer, name);
+        const game = new GameModel(uuidGame, player1);
         this.games[uuidGame] = game;
-        //console.log(game + this.count);
-        //console.log(uuidPlayer);
+    
         return {
             playerID: uuidPlayer,
             gameID: uuidGame,
@@ -33,10 +32,10 @@ export default class Server{
 
     joinGame(gameID, name){
         const uuidPlayer = uuidv4();
-        const player2 = new Player(uuidPlayer, name);
+        const player2 = new PlayerModel(uuidPlayer, name);
         const game = this.getGame(gameID);
         game.addPlayer(player2);
-        //console.log(added);
+     
         return {
             playerID: uuidPlayer,
             gameID: gameID

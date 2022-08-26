@@ -1,5 +1,5 @@
 
-export default class Game {
+export default class GameModel {
     //The model for a game of rockPaperScissors
     players = [null, null]
     constructor(gameID, player1) {
@@ -9,7 +9,7 @@ export default class Game {
 
     addPlayer(player) {
         //Adds a second player to a game or returns false if there are already two players
-        //console.log(this.players[0])
+        
         if (!this.players[0]) this.players[0] = player;
         else if (!this.players[1]) this.players[1] = player;
         else{
@@ -27,11 +27,9 @@ export default class Game {
 
     getState(playerID){
         //Returns the state of the game
-        //console.log(this.players);
-        //console.log(playerID);
+
         const thisPlayer = this.getPlayer(playerID)
-        //console.log(thisPlayer);
-        //console.log(this.players);
+
         const otherPlayer  = this.players.filter(thing => thing !== null).filter(player => !(player.id == playerID))[0];
         const returnObject = {
             players: [thisPlayer? (thisPlayer.name || "Anonymous") + " (you)": "Player has not joined", 
@@ -47,17 +45,13 @@ export default class Game {
                 returnObject.result = result;
             }
         }
-        
-        //console.log(thisPlayer.choice);
-        //console.log(otherPlayer.choice);
         return returnObject;
     }
 
     getPlayer(id){
-        //console.log(this.players);
+        
         const thisPlayer = this.players.filter(thing => thing != null).filter(player => player.id == id)[0];
-        if(!thisPlayer) { //console.log(this.players);
-            //console.log(id);
+        if(!thisPlayer) {
             throw new Error("Incorrect playerID!");}
         return thisPlayer;
     }

@@ -2,7 +2,7 @@ import {serverApp} from "./index.js"
 import chai from "chai"
 import {use, should, expect } from "chai";
 import chaiHttp from "chai-http";
-import Server from "./server.js";
+import gameService from "./gameService.js";
 should()
 use(chaiHttp);
 
@@ -35,7 +35,6 @@ describe('Test /games', function () {
     it("Should be able to join game", function(done) {
       requester.post('/games')
       .end(function (err, res) {
-        //console.log(res.body)
         const {gameID, playerID} = res.body;
         requester.post("/games/"+gameID + "/join")
         .end(function (err, res) {
@@ -49,7 +48,6 @@ describe('Test /games', function () {
     it("Should not be able to join game that does not exist", function(done) {
       requester.post('/games')
       .end(function (err, res) {
-        //console.log(res.body)
         const {gameID, playerID} = res.body;
         requester.post("/games/"+"123412asd3" + "/join")
         .end(function (err, res) {
@@ -63,7 +61,6 @@ describe('Test /games', function () {
     it("Should not be able to join game that is full", function(done) {
       requester.post('/games')
       .end(function (err, res) {
-        //console.log(res.body)
         const {gameID, playerID} = res.body;
         requester.post("/games/"+gameID+"/join")
         .end(function (err, res) {
@@ -83,11 +80,9 @@ describe('Test /games', function () {
     it("Should display your name", function(done) {
       requester.post('/games').send({name: "Kalle"})
       .end(function (err, res) {
-        //console.log(res.body)
         const {gameID, playerID} = res.body;
         requester.get("/games/"+gameID).send({playerID: playerID})
         .end(function (err, res) {
-          //console.log(res.body.players)
           expect(err).to.be.null;
           expect(res).to.have.status(200);
           expect(res.body.players[0]).to.equal("Kalle (you)")
@@ -99,7 +94,6 @@ describe('Test /games', function () {
     it("Should display names of other players who have joined but not their choices", function(done) {
       requester.post('/games').send({name: "Kalle"})
       .end(function (err, res) {
-        //console.log(res.body)
         const {gameID, playerID: player1} = res.body;
         requester.post("/games/"+gameID+"/join").send({name: "Guy"})
         .end(function (err, res) {
@@ -108,7 +102,6 @@ describe('Test /games', function () {
           .end(function (err, res) {
             requester.get("/games/"+gameID).send({playerID: player1})
             .end(function (err, res) {
-              //console.log(res.body)
               expect(err).to.be.null;
               expect(res).to.have.status(200);
               expect(res.body.players[1]).to.equal("Guy")
@@ -123,14 +116,11 @@ describe('Test /games', function () {
     it("Should display your choice", function(done) {
       requester.post('/games').send({name: "Kalle"})
       .end(function (err, res) {
-        //console.log(res.body)
         const {gameID, playerID} = res.body;
         requester.post("/games/"+gameID+"/play").send({choice: "Paper", playerID: playerID})
         .end(function (err, res) {
-          //console.log(res.body)
           requester.get("/games/"+gameID).send({playerID: playerID})
           .end(function (err, res) {
-            //console.log(res.body)
             expect(res).to.have.status(200);
             expect(res.body.yourChoice).to.equal("Paper")
             done()
@@ -142,7 +132,7 @@ describe('Test /games', function () {
     it("Should display the correct result", function(done) {
       requester.post('/games').send({name: "Kalle"})
       .end(function (err, res) {
-        //console.log(res.body)
+       
         const {gameID, playerID: player1} = res.body;
         requester.post("/games/"+gameID+"/join").send({name: "Guy"})
         .end(function (err, res) {
@@ -157,8 +147,6 @@ describe('Test /games', function () {
                 const resP2 = res
                 requester.get("/games/"+gameID).send({playerID: player1})
                 .end(function (err, res) {
-
-                  console.log(resP2.body)
                   expect(res).to.have.status(200);
                   expect(resP2).to.have.status(200);
                   expect(res.body.result).to.equal("You win!")
@@ -174,7 +162,7 @@ describe('Test /games', function () {
 
       requester.post('/games').send({name: "Kalle"})
       .end(function (err, res) {
-        //console.log(res.body)
+        
         const {gameID, playerID: player1} = res.body;
         requester.post("/games/"+gameID+"/join").send({name: "Guy"})
         .end(function (err, res) {
@@ -206,18 +194,18 @@ describe('Test /games', function () {
 })
 
   describe('Test Server', function () {
-    const testServer = new Server("localhost", 1337);
+    const testServer = new gameService("localhost", 1337);
 
     describe('Test createGame', function () {
       const {gameID, playerID} = testServer.createGame();
       it("Should create a game", function(done) {
-        //console.log(gameID);
+        
         expect(() => testServer.getGame(gameID)).to.not.throw("Incorrect gameID!");
         done()
       })
       it("Should add player1 to game", function(done) {
         expect(() => testServer.getGame(gameID).getPlayer(playerID)).to.not.throw("Incorrect playerID!");
-        //console.log(testServer.createGame());
+       
         done()
       })
     })
@@ -226,8 +214,7 @@ describe('Test /games', function () {
       const {gameID} = testServer.createGame();
       it("Should add player to game", function(done) {
         const {playerID} = testServer.joinGame(gameID);
-        //console.log(testServer.getGame(gameID).players[1]);
-        //console.log(playerID);
+        
         testServer.getGame(gameID).players[1].should.exist;
         testServer.getGame(gameID).players[1].id.should.equal(playerID);
         done()
@@ -304,7 +291,7 @@ describe('Test /games', function () {
 
         const messageP1 = testServer.check(gameID, player1);
         const messageP2 = testServer.check(gameID, player2);
-        //console.log(messageP1)
+        
         messageP1.yourChoice.should.equal("Paper");
         messageP1.theirChoice.should.equal("TBD");
         messageP1.result.should.equal("TBD");
