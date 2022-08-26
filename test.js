@@ -1,4 +1,4 @@
-import {serverApp} from "./index.js"
+import {serverApp} from "./router.js"
 import chai from "chai"
 import {use, should, expect } from "chai";
 import chaiHttp from "chai-http";
